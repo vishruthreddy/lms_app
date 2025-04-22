@@ -1,5 +1,5 @@
 - name: Deploy LMS Helm chart
-  hosts: localhost
+  hosts: n1
   connection: local
   gather_facts: no
 
