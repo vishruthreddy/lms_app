@@ -1,12 +1,14 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.backend.configMap.name }}
-  namespace: {{ .Values.global.namespace }}
+  name: {{ .Values.configMap.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
 data:
-  DB_HOST: {{ .Values.backend.configMap.dbHost }}
-  DB_PORT: {{ .Values.backend.configMap.dbPort }}
-  DB_USER: {{ .Values.backend.configMap.dbUser }}
-  DB_NAME: {{ .Values.backend.configMap.dbName }}
-  PORT: {{ .Values.backend.configMap.port }}
-  MODE: {{ .Values.backend.configMap.mode }}
+  DB_HOST: {{ .Values.configMap.data.dbHost }}
+  DB_PORT: {{ .Values.configMap.data.dbPort | quote }}
+  DB_USER: {{ .Values.configMap.data.dbUser }}
+  DB_NAME: {{ .Values.configMap.data.dbName }}
+  PORT: {{ .Values.configMap.data.port | quote }}
+  MODE: {{ .Values.configMap.data.mode }}
