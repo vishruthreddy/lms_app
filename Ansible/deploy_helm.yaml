@@ -1,7 +1,7 @@
 - name: Deploy LMS Helm chart to Kubernetes
   hosts: n1
-  become: false
-  gather_facts: no
+  connection: local
+  gather_facts: false
   vars:
     namespace: lms2-namespace
 
@@ -15,9 +15,9 @@
 
     - name: Install LMS Helm chart
       community.kubernetes.helm:
-        name: lms
-        chart_path: "./lms_app"
+        release_name: lms
+        chart_ref: ./lms_app
         release_namespace: "{{ namespace }}"
         values_files:
-          - "./lms_app/values.yaml"
+          - ./lms_app/values.yaml
         state: present
