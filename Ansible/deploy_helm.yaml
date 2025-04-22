@@ -1,0 +1,14 @@
+- name: Deploy LMS Helm chart
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Install Helm chart for LMS
+      community.kubernetes.helm:
+        name: lms
+        chart_path: "../charts/lms"
+        release_namespace: lms-namespace
+        values_files:
+          - "../charts/lms/values.yaml"
+        state: present
