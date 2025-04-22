@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.backend.configMap.name }}
+  namespace: {{ .Values.global.namespace }}
+data:
+  DB_HOST: {{ .Values.backend.configMap.dbHost }}
+  DB_PORT: {{ .Values.backend.configMap.dbPort }}
+  DB_USER: {{ .Values.backend.configMap.dbUser }}
+  DB_NAME: {{ .Values.backend.configMap.dbName }}
+  PORT: {{ .Values.backend.configMap.port }}
+  MODE: {{ .Values.backend.configMap.mode }}
