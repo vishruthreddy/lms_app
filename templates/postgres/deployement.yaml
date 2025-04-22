@@ -1,27 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-deployment
-  namespace: {{ .Values.global.namespace }}
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
 spec:
-  replicas: {{ .Values.postgres.replicaCount }}
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      component: postgres
+      component: {{ .Values.labels.component }}
   template:
     metadata:
       labels:
-        component: postgres
+        component: {{ .Values.labels.component }}
     spec:
-      serviceAccountName: db-sa
+      serviceAccountName: {{ index .Values.serviceAccounts 0 }}
       containers:
-        - name: postgres
-          image: {{ .Values.postgres.image }}
+        - name: {{ .Values.container.name }}
+          image: {{ .Values.container.image }}
           ports:
-            - containerPort: {{ .Values.postgres.service.port }}
+            - containerPort: {{ .Values.container.port }}
           env:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.postgres.secret.name }}
+                  name: postgres-secret
                   key: password
