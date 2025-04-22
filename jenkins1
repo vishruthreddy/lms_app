@@ -8,7 +8,7 @@ pipeline {
                                  disableHostKeyChecking: true,
                                  installation: 'Ansible',
                                  inventory: 'inventory/dev.inv',
-                                 playbook: 'playbook/deploy_helm.yaml'
+                                 playbook: 'Ansible/deploy_helm.yaml'
             }
         }
     }
