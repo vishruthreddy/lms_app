@@ -1,0 +1,47 @@
+# Global values
+global:
+  namespace: lms
+
+# Service Accounts
+serviceAccounts:
+  db-sa: true
+  app-sa: true
+  web-sa: true
+
+# PostgreSQL Configuration
+postgres:
+  enabled: true
+  image: postgres
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 5432
+  secret:
+    name: postgres-secret
+    password: admin12345
+
+# Backend Configuration
+backend:
+  enabled: true
+  image: vishruth04/be
+  replicaCount: 1
+  service:
+    type: LoadBalancer
+    port: 3000
+  configMap:
+    name: backend-config-map
+    dbHost: postgres-cluster-ip-service
+    dbPort: "5432"
+    dbUser: postgres
+    dbName: postgres
+    port: "3000"
+    mode: production
+
+# Frontend Configuration
+frontend:
+  enabled: true
+  image: vishruth04/fe
+  replicaCount: 1
+  service:
+    type: LoadBalancer
+    port: 80
