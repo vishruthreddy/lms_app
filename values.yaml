@@ -1,47 +1,78 @@
-# Global values
-global:
-  namespace: lms
+namespace: lms1  # Namespace for both Deployment and Service
 
-# Service Accounts
 serviceAccounts:
-  db-sa: true
-  app-sa: true
-  web-sa: true
+  - db-sa  # Service account for database tasks
+  - app-sa # Service account for application tasks
+  - web-sa # Service account for web tasks
 
-# PostgreSQL Configuration
 postgres:
-  enabled: true
-  image: postgres
-  replicaCount: 1
-  service:
-    type: ClusterIP
-    port: 5432
-  secret:
-    name: postgres-secret
-    password: admin12345
+  password: admin12345 # PostgreSQL database password
 
-# Backend Configuration
+deployment:
+  name: postgres-deployment # Name of the PostgreSQL Deployment
+
+labels:
+  app: postgres-app     # Application label
+  component: postgres   # Component label for both Deployment and Service
+
+replicas: 1             # Number of replica pods
+
+container:
+  name: postgres         # Name of the container
+  image: postgres:latest # Docker image for the container
+  port: 5432             # Container port for PostgreSQL
+
+service:
+  name: postgres-cluster-ip-service # Name of the PostgreSQL Service
+  type: ClusterIP                   # Service type (e.g., ClusterIP, NodePort)
+  port: 5432                        # Port exposed by the Service
+  targetPort: 5432                  # Target port in the container
+
 backend:
-  enabled: true
-  image: vishruth04/be
-  replicaCount: 1
+  deployment:
+    name: lms-be
+    replicas: 1
+
+  labels:
+    app: lms-be
+
+  container:
+    image: vishruth04/be
+    port: 3000
+
   service:
+    name: lms-be-service
     type: LoadBalancer
     port: 3000
-  configMap:
-    name: backend-config-map
-    dbHost: postgres-cluster-ip-service
-    dbPort: "5432"
-    dbUser: postgres
-    dbName: postgres
-    port: "3000"
-    mode: production
 
-# Frontend Configuration
+
 frontend:
-  enabled: true
-  image: vishruth04/fe
-  replicaCount: 1
+  deployment:
+    name: lms-fe
+    replicas: 1
+
+  labels:
+    app: lms-fe
+
+  container:
+    image: vishruth04/fe
+    port: 80
+
   service:
+    name: lms-fe-service
     type: LoadBalancer
     port: 80
+
+configMap:
+  name: backend-config-map # Name of the ConfigMap
+  data:
+    dbHost: postgres-cluster-ip-service # Database host (Service name)
+    dbPort: "5432"                      # Database port
+    dbUser: postgres                    # Database user
+    dbName: postgres                    # Database name
+    port: "3000"                        # Backend application port
+    mode: production                    # Backend application mode
+
+secret:
+  name: postgres-secret
+  key: password
