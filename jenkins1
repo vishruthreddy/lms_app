@@ -1,0 +1,15 @@
+pipeline {
+    agent any
+
+    stages {
+        stage("Deploy LMS Helm Chart") {
+            steps {
+                ansiblePlaybook credentialsId: 'ubuntu1',
+                                 disableHostKeyChecking: true,
+                                 installation: 'Ansible',
+                                 inventory: 'inventory/dev.inv',
+                                 playbook: 'playbook/deploy_helm.yml'
+            }
+        }
+    }
+}
